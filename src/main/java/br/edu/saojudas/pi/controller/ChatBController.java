@@ -4,6 +4,7 @@ import br.edu.saojudas.pi.pacote.ChatB;
 import br.edu.saojudas.pi.pacote.Conversa;
 import br.edu.saojudas.pi.pacote.Resposta;
 import br.edu.saojudas.pi.service.ChatService;
+import br.edu.saojudas.pi.service.ConversaService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -33,45 +34,48 @@ public class ChatBController extends HttpServlet {
         ChatB chat = (ChatB) session.getAttribute(CHAT);
         String pergunta = request.getParameter(ATT_PERG);
         String pAcao = request.getParameter("acao");
-        Resposta resposta ;
+
+        //Instanciando e adicionando id
+        ConversaService service = new ConversaService();
+        Conversa cv = new Conversa();
+
+
+        Resposta resposta = chatService.buscaResposta(pergunta);
+
+
+    String aux = cv.getPergunta();
+
+    if (pAcao.equals("Enviar")) {
+        //Adicionando ao Banco a Conversa
+        cv.setPergunta(pergunta);
+        cv.setResposta(resposta.getValor());
+        int id = service.AdicionarConversa(cv);
+        cv.setId(id);
+        if (resposta == null) {
+
+            chat.addConversa(id, pergunta, RESPOSTA_NAO_ENCONTRADA);
+        } else {
+            chat.addConversa(id, pergunta, resposta.getValor());
+
+        }
+    } else if (pAcao.equals("Sim")) {
+        //Adicionando ao Banco a Conversa
+
+        cv.setPergunta(aux);
+        cv.setResposta(resposta.getValor());
+        int id = service.AdicionarConversa(cv);
+        cv.setId(id);
+
+        resposta = chatService.SimBotaoo(aux);
+        chat.addConversa(id, aux, resposta.getValor());
 
 
 
-        RequestDispatcher view;
-        if (pAcao.equals("Enviar")) {
-            resposta = chatService.buscaResposta(pergunta);
-            if (resposta == null) {
-
-                chat.addConversa(pergunta, RESPOSTA_NAO_ENCONTRADA);
-            } else {
-                chat.addConversa(pergunta, resposta.getValor());
-
-            }
-
-
-
+}
         session.setAttribute(CHAT, chat);
 
-        view = request.getRequestDispatcher("chat.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("chat.jsp");
         view.forward(request, response);
-    }
-    else if(pAcao.equals("Sim")) {
-            resposta= chatService.SimBotaoo(pergunta);
-
-            if (resposta == null) {
-
-                chat.addConversa(pergunta, RESPOSTA_NAO_ENCONTRADA);
-            } else {
-                chat.addConversa(pergunta, resposta.getValor());
-
-            }
-
-
-            session.setAttribute(CHAT, chat);
-
-            view = request.getRequestDispatcher("chat.jsp");
-            view.forward(request, response);
-        }
     }
 
 

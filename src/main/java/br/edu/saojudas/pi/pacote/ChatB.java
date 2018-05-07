@@ -12,11 +12,12 @@ public class ChatB {
 		conversas = new ArrayList<>();
 	}
 
-	public void addConversa(String pergunta, String resposta) {
+	public void addConversa(int id,String pergunta, String resposta) {
 
-		conversas.add(new Conversa(pergunta, resposta));
+		conversas.add(new Conversa(id,pergunta, resposta));
 	}
 	public List<Conversa> Pergunta(){
+
 		return conversas;
 	}
 	public List<Conversa> getConversas() {

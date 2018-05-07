@@ -1,9 +1,42 @@
 package br.edu.saojudas.pi.dao;
 
+import br.edu.saojudas.pi.pacote.Conversa;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class ChatBDao {
 
 	private static final String INSERT_ATENDENTE = "INSERT INTO atendente(Nome_Atendente, Email_Atendente, CPF_Atendente,"
             + " RG_Atendente, Telefone_Atendente, Status_Atendente, Senha_Atendente ) VALUES (?, ?, ?,?, ?, ?, ?)";
+
+	public int AdicionaConversa(Conversa cv) {
+		String sqlInsert = "INSERT INTO Conversa( Pergunta, respostas) VALUES (?,?)";
+		try (Connection conn = ConnectionFactory.obtemConexao();
+			 PreparedStatement stm = conn.prepareStatement(sqlInsert);) {
+			stm.setString(1, cv.getPergunta());
+			stm.setString(2, cv.getResposta());
+
+			stm.execute();
+			String sqlQuery = "SELECT LAST_INSERT_ID()";
+			try (PreparedStatement stm2 = conn.prepareStatement(sqlQuery);
+				 ResultSet rs = stm2.executeQuery();) {
+				if (rs.next()) {
+					cv.setId(rs.getInt(1));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return cv.getId();
+	}
+	}
+
+
 
 //	public int cadastroAtendente(Atendente at) {
 //		// usando o try with resources do Java 7, que fecha o que abriu
@@ -260,4 +293,3 @@ public class ChatBDao {
 //		}
 //		return pl;
 //	}
-}

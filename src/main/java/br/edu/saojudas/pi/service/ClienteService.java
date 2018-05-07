@@ -8,6 +8,7 @@ public class ClienteService {
 	public ClienteDao dao = new ClienteDao();
 
 	public Cliente carregar(int id){
+
 		return dao.carregarCliente(id);
 	}
 
