@@ -1,5 +1,6 @@
 package br.edu.saojudas.pi.controller;
 
+import br.edu.saojudas.pi.dao.ChatBDao;
 import br.edu.saojudas.pi.pacote.ChatB;
 import br.edu.saojudas.pi.pacote.Conversa;
 import br.edu.saojudas.pi.pacote.Resposta;
@@ -43,7 +44,7 @@ public class ChatBController extends HttpServlet {
         Resposta resposta = chatService.buscaResposta(pergunta);
 
 
-    String aux = cv.getPergunta();
+
 
     if (pAcao.equals("Enviar")) {
         //Adicionando ao Banco a Conversa
@@ -59,15 +60,16 @@ public class ChatBController extends HttpServlet {
 
         }
     } else if (pAcao.equals("Sim")) {
-        //Adicionando ao Banco a Conversa
 
-        cv.setPergunta(aux);
+        ChatBDao dao=new ChatBDao();
+        resposta = chatService.SimBotaoo(dao.Ultima());
+
+        cv.setPergunta(dao.Ultima());
         cv.setResposta(resposta.getValor());
         int id = service.AdicionarConversa(cv);
         cv.setId(id);
+        chat.addConversa(id, dao.Ultima(), resposta.getValor());
 
-        resposta = chatService.SimBotaoo(aux);
-        chat.addConversa(id, aux, resposta.getValor());
 
 
 

@@ -34,6 +34,28 @@ public class ChatBDao {
 		}
 		return cv.getId();
 	}
+	public String Ultima() {
+		Conversa conv = new Conversa();
+
+		String sqlSelect = "select pergunta from conversa order by id_conversa desc limit 1";
+		// usando o try with resources do Java 7, que fecha o que abriu
+		try (Connection conn = ConnectionFactory.obtemConexao();
+			 PreparedStatement stm = conn.prepareStatement(sqlSelect);) {
+			try (ResultSet rs = stm.executeQuery();) {
+				if (rs.next()) {
+					conv.setPergunta(rs.getString("pergunta"));
+				} else {
+					conv.setPergunta(null);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} catch (SQLException e1) {
+			System.out.print(e1.getStackTrace());
+		}
+
+		return conv.getPergunta();
+	}
 	}
 
 

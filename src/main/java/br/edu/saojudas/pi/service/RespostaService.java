@@ -30,17 +30,18 @@ public class RespostaService {
         ArrayList<Integer> idsPalavras = getPalvrasIds(palavraChaves);
         ArrayList<Resposta> respostas = dao.buscaRespostaPorPalavrasChaves(idsPalavras);
         ArrayList<Resposta> respostasPontuadas = obtemRespostasPontuadasPorRepeticao(respostas);
+        if(cont>2){
 
+            cont=0;
+        }
         if (respostasPontuadas.size() > 0) {
-            if(cont>2){
-
-                cont=0;
-            }
 
 
-            else
+
+
             return respostasPontuadas.get(cont++);
         }
+
 
         return null;
     }
